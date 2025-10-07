@@ -1,28 +1,36 @@
-using System.Diagnostics;
+using DAL;
 using FootballBettingWebApp.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 
-namespace FootballBettingWebApp.Controllers
+public class HomeController : Controller
 {
-    public class HomeController : Controller
+    private readonly ILogger<HomeController> _logger;
+    private readonly DatabaseConnection _dbConnection;
+
+    public HomeController(ILogger<HomeController> logger, DatabaseConnection dbConnection)
     {
-        private readonly ILogger<HomeController> _logger;
+        _logger = logger;
+        _dbConnection = dbConnection;
+    }
+    public IActionResult Index()
+    {
+        ViewBag.UpcomingMatch = "Real Madrid vs Barcelona";
+        return View();
+    }
 
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
+    public IActionResult TestDb()
+    {
+        bool success = _dbConnection.TestConnection();
+        if (success)
+            return Content(" Database connection successful!");
+        else
+            return Content(" Database connection failed! Check console for details.");
+    }
 
-        public IActionResult Index()
-        {
-            ViewBag.UpcomingMatch = "Real Madrid vs Barcelona";
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+    public IActionResult Error()
+    {
+        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }
