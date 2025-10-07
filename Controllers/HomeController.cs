@@ -15,11 +15,7 @@ namespace FootballBettingWebApp.Controllers
 
         public IActionResult Index()
         {
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
+            ViewBag.UpcomingMatch = "Real Madrid vs Barcelona";
             return View();
         }
 
