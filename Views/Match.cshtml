@@ -1,0 +1,42 @@
+﻿@model IEnumerable<DAL.Models.Match>
+
+@{
+    ViewData["Title"] = "Upcoming Matches";
+}
+
+<link rel="stylesheet" href="~/css/matches.css" />
+
+<!-- Toggle button -->
+<button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+
+<div class="page">
+    <aside class="sidebar" id="sidebar">
+        <div class="nav-btn"><a href="@Url.Action("Index", "Match")">🏟 Upcoming Matches</a></div>
+        <div class="nav-btn"><a href="#">💰 Place Bet</a></div>
+        <div class="nav-btn"><a href="#">💼 Wallet</a></div>
+        <div class="nav-btn"><a href="#">📜 Betting History</a></div>
+        <div class="nav-btn"><a href="#">🧾 Receipt</a></div>
+    </aside>
+
+    <main class="content">
+        <div class="container">
+            <h2>Upcoming Matches</h2>
+
+            <div class="matches">
+                @foreach (var m in Model)
+                {
+                    <div class="match-card">
+                        <div class="teams">@m.TeamHome <span class="vs">vs</span> @m.TeamAway</div>
+                        <div class="match-meta">@m.Date.ToLocalTime().ToString("dd MMM yyyy HH:mm")</div>
+                    </div>
+                }
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    function toggleSidebar() {
+        document.getElementById("sidebar").classList.toggle("active");
+    }
+</script>

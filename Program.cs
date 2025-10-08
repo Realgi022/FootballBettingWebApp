@@ -1,10 +1,14 @@
 using DAL;
+using DAL.Interfaces;
+using DAL.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<DAL.DatabaseConnection>();
+
+builder.Services.AddScoped<IMatchRepository, MatchRepository>();
 
 var app = builder.Build();
 
@@ -16,7 +20,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();  
+app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
