@@ -1,4 +1,6 @@
-﻿@{
+﻿@model IEnumerable<BLL.DTOs.MatchDto>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -15,9 +17,14 @@
 
     <div class="matches">
         <h3>Upcoming matches</h3>
-        <div class="match-card">
-            <p>@ViewBag.UpcomingMatch</p>
-        </div>
+
+        @foreach (var match in Model)
+        {
+            <div class="match-card">
+                <p>@match.TeamHome vs @match.TeamAway</p>
+                <small>@match.Date.ToLocalTime().ToString("dd MMM yyyy HH:mm")</small>
+            </div>
+        }
     </div>
 
     <div class="auth-links">

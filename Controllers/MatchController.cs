@@ -1,22 +1,21 @@
-﻿using DAL.Interfaces;
+﻿using BLL.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using BLL.Interfaces;
 
-namespace FootballBettingWebApp.Controllers
+public class MatchController : Controller
 {
-    public class MatchController : Controller
+    private readonly IMatchService _matchService;
+
+    public MatchController(IMatchService matchService)
     {
-        private readonly IMatchRepository _matchRepository;
+        _matchService = matchService;
+    }
 
-        public MatchController(IMatchRepository matchRepository)
-        {
-            _matchRepository = matchRepository;
-        }
-
-        public async Task<IActionResult> Index()
-        {
-            var matches = await _matchRepository.GetUpcomingAsync();
-            return View("~/Views/Match.cshtml", matches); 
-        }
+    public async Task<IActionResult> Index()
+    {
+        IEnumerable<MatchDto> matches = await _matchService.GetUpcomingMatchesDtoAsync();
+        return View("~/Views/Match.cshtml", matches);
     }
 }

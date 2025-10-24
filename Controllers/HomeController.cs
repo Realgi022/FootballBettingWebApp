@@ -1,32 +1,27 @@
-using DAL;
+using BLL.DTOs;
 using FootballBettingWebApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using BLL.Interfaces;
 
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
-    private readonly DatabaseConnection _dbConnection;
+    private readonly IMatchService _matchService;
 
-    public HomeController(ILogger<HomeController> logger, DatabaseConnection dbConnection)
+    public HomeController(ILogger<HomeController> logger, IMatchService matchService)
     {
         _logger = logger;
-        _dbConnection = dbConnection;
-    }
-    public IActionResult Index()
-    {
-        ViewBag.UpcomingMatch = "Real Madrid vs Barcelona";
-        return View();
+        _matchService = matchService;
     }
 
-    public IActionResult TestDb()
+    public async Task<IActionResult> Index()
     {
-        bool success = _dbConnection.TestConnection();
-        if (success)
-            return Content(" Database connection successful!");
-        else
-            return Content(" Database connection failed! Check console for details.");
+        IEnumerable<MatchDto> upcomingMatches = await _matchService.GetUpcomingMatchesDtoAsync();
+        return View(upcomingMatches);
     }
 
     public IActionResult Error()
