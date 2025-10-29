@@ -15,6 +15,9 @@ public class MatchController : Controller
 
     public async Task<IActionResult> Index()
     {
+        if (HttpContext.Session.GetString("Username") == null)
+            return RedirectToAction("Login", "User");
+
         IEnumerable<MatchDto> matches = await _matchService.GetUpcomingMatchesDtoAsync();
         return View("~/Views/Match.cshtml", matches);
     }

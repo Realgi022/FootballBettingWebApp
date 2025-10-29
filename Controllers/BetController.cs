@@ -17,6 +17,9 @@ public class BetController : Controller
     // Show page with upcoming matches to place bets
     public async Task<IActionResult> Place()
     {
+        if (HttpContext.Session.GetString("Username") == null)
+            return RedirectToAction("Login", "User");
+
         var matches = await _matchService.GetUpcomingMatchesDtoAsync();
         return View("~/Views/Bet/PlaceBet.cshtml", matches);
     }
@@ -25,7 +28,22 @@ public class BetController : Controller
     [HttpPost]
     public async Task<IActionResult> PlaceBet(BetDto bet)
     {
-        await _betService.AddBetAsync(bet);
+        var username = HttpContext.Session.GetString("Username");
+        if (string.IsNullOrEmpty(username))
+        {
+            return RedirectToAction("Login", "User");
+        }
+
+        try
+        {
+            await _betService.AddBetAsync(bet, username); // pass username to service
+        }
+        catch (System.Exception ex)
+        {
+            // Optionally log ex.Message
+            TempData["Error"] = ex.Message;
+        }
+
         return RedirectToAction("Place");
     }
 }

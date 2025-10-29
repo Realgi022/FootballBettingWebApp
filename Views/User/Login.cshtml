@@ -1,4 +1,4 @@
-﻿@model FootballBettingWebApp.Models.User
+﻿@model BLL.DTOs.LoginDTO
 @{
     ViewData["Title"] = "Login";
 }
@@ -6,9 +6,14 @@
 <div class="auth-container">
     <h2>Log in</h2>
 
+    @if (ViewBag.Error != null)
+    {
+        <p style="color:red;">@ViewBag.Error</p>
+    }
+
     <form asp-action="Login" method="post">
         <input asp-for="Username" placeholder="Name" required />
-        <input asp-for="PasswordHash" type="password" placeholder="Password" required />
+        <input asp-for="Password" type="password" placeholder="Password" required />
 
         <button type="submit">Login</button>
     </form>
