@@ -9,15 +9,24 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<DAL.DatabaseConnection>();
 
-// Match & Bet services
+// Match, Bet, Wallet services
 builder.Services.AddScoped<IMatchRepository, MatchRepository>();
 builder.Services.AddScoped<IMatchService, MatchService>();
 builder.Services.AddScoped<IBetService, BetService>();
 builder.Services.AddScoped<IBetRepository, BetRepository>();
+builder.Services.AddScoped<IWalletRepository, WalletRepository>();
+builder.Services.AddScoped<IWalletService, WalletService>();
+
 
 // User services
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IUserService, UserService>();
+string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+                          ?? throw new ArgumentNullException("Connection string is null");
+builder.Services.AddScoped<IUserRepository, UserRepository>(sp => new UserRepository(builder.Configuration));
+builder.Services.AddScoped<IUserService, UserService>(sp =>
+    {
+        IUserRepository repo = sp.GetRequiredService<IUserRepository>();
+        return new UserService(repo);
+    });
 
 // Session support
 builder.Services.AddDistributedMemoryCache();

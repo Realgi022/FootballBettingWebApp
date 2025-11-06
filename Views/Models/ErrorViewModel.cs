@@ -1,4 +1,4 @@
-namespace FootballBettingWebApp.Models
+﻿namespace FootballBettingWebApp.Models
 {
     public class ErrorViewModel
     {

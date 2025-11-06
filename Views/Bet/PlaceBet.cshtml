@@ -12,13 +12,16 @@
         <div class="user-info">
             @if (!string.IsNullOrEmpty(username))
             {
-                <p>Logged in as: <strong>@username</strong></p>
+                <p>
+                    Logged in as: <strong>@username</strong>
+                    | Balance: <strong>$@ViewBag.Balance.ToString("F2")</strong>
+                </p>
             }
         </div>
 
         <div class="nav-btn"><a href="@Url.Action("Index", "Match")">🏟 Upcoming Matches</a></div>
         <div class="nav-btn"><a href="@Url.Action("Place", "Bet")">💰 Place Bet</a></div>
-        <div class="nav-btn"><a href="#">💼 Wallet</a></div>
+        <div class="nav-btn"><a href="@Url.Action("Index", "Wallet")">💼 Wallet</a></div>
         <div class="nav-btn"><a href="#">📜 Betting History</a></div>
         <div class="nav-btn"><a href="#">🧾 Receipt</a></div>
     </aside>
