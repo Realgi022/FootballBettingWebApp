@@ -1,0 +1,94 @@
+﻿@model IEnumerable<BLL.DTOs.BetDto>
+
+@{
+    ViewData["Title"] = "My Bets Receipt";
+    var username = Context.Session.GetString("Username");
+}
+
+<link rel="stylesheet" href="~/css/matches.css" />
+
+<div class="page">
+    <aside class="sidebar">
+        <div class="user-info">
+            @if (!string.IsNullOrEmpty(username))
+            {
+                <p>
+                    Logged in as: <strong>@username</strong>
+                    | Balance: <strong>$@ViewBag.Balance.ToString("F2")</strong>
+                </p>
+            }
+        </div>
+
+        <div class="nav-btn"><a href="@Url.Action("Index", "Match")">🏟 Upcoming Matches</a></div>
+        <div class="nav-btn"><a href="@Url.Action("Place", "Bet")">💰 Place Bet</a></div>
+        <div class="nav-btn"><a href="@Url.Action("Index", "Wallet")">💼 Wallet</a></div>
+        <div class="nav-btn"><a href="#">📜 Betting History</a></div>
+        <div class="nav-btn"><a href="@Url.Action("Receipt", "Bet")" class="active">🧾 Receipt</a></div>
+    </aside>
+
+    <main class="content">
+        <div class="container">
+            <h2>🧾 My Bet Receipt</h2>
+
+            @if (!Model.Any())
+            {
+                <p>No bets placed yet.</p>
+            }
+            else
+            {
+                <table class="receipt-table">
+                    <thead>
+                        <tr>
+                            <th>Match</th>
+                            <th>Bet Type</th>
+                            <th>Stake ($)</th>
+                            <th>Odds</th>
+                            <th><strong>Potential Win ($)</strong></th> 
+                            <th>Status</th>
+                            <th>Placed At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var bet in Model)
+                        {
+                            <tr>
+                                <td>@bet.TeamHome vs @bet.TeamAway</td>
+                                <td>@bet.BetType</td>
+                                <td>@bet.Stake.ToString("F2")</td>
+                                <td>@bet.Odds.ToString("F2")</td>
+                                <td style="color: #2ecc71; font-weight: bold;">
+                                    $@(bet.AmountToWin.ToString("F2"))
+                                </td> 
+                                <td>@bet.Status</td>
+                                <td>@bet.PlacedAt.ToLocalTime().ToString("dd MMM yyyy HH:mm")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            }
+        </div>
+    </main>
+</div>
+
+<style>
+    .receipt-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+        .receipt-table th, .receipt-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .receipt-table th {
+            background-color: #f4f4f4;
+        }
+
+        .receipt-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+</style>

@@ -39,20 +39,42 @@ public class BetController : Controller
     {
         var username = HttpContext.Session.GetString("Username");
         if (string.IsNullOrEmpty(username))
-        {
             return RedirectToAction("Login", "User");
-        }
 
         try
         {
-            await _betService.AddBetAsync(bet, username); // pass username to service
+            // Attempt to place the bet
+            await _betService.AddBetAsync(bet, username);
+            return RedirectToAction("Receipt"); 
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
-            // Optionally log ex.Message
             TempData["Error"] = ex.Message;
-        }
 
-        return RedirectToAction("Place");
+            // Reload the matches so the view has data again
+            var matches = await _matchService.GetUpcomingMatchesDtoAsync();
+
+            // Get wallet to show balance again
+            var wallet = await _walletService.GetWalletAsync(username);
+            ViewBag.Balance = wallet?.Balance ?? 0;
+
+            return View("~/Views/Bet/PlaceBet.cshtml", matches);
+        }
     }
+
+
+    public async Task<IActionResult> Receipt()
+{
+    var username = HttpContext.Session.GetString("Username");
+    if (string.IsNullOrEmpty(username))
+        return RedirectToAction("Login", "User");
+
+    var allBets = await _betService.GetAllBetsAsync(username); 
+    var userBets = allBets.Where(b => b.Username == username); 
+
+    var wallet = await _walletService.GetWalletAsync(username);
+    ViewBag.Balance = wallet?.Balance ?? 0;
+
+    return View("~/Views/Bet/Receipt.cshtml", userBets);
+}
 }
