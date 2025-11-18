@@ -1,6 +1,7 @@
 ﻿using BLL.DTOs;
 using BLL.Interfaces;
 using BLL.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FootballBettingWebApp.Controllers
@@ -60,26 +61,28 @@ namespace FootballBettingWebApp.Controllers
 
             try
             {
-                var isValid = await _userService.ValidateLoginAsync(loginDto);
-                if (isValid)
+                var user = await _userService.ValidateLoginAsync(loginDto);
+                if (user != null)
                 {
-                    HttpContext.Session.SetString("Username", loginDto.Username);
+                    HttpContext.Session.SetString("Username", user.Username);
+                    HttpContext.Session.SetInt32("Role", (int)user.Role);
+
                     return RedirectToAction("Index", "Match");
                 }
                 else
                 {
-                    // Invalid username or password, do not throw an exception
                     ViewBag.Error = "Invalid username or password.";
                     return View(loginDto);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                // Catch unexpected exceptions
                 ViewBag.Error = "An error occurred. Please try again.";
                 return View(loginDto);
             }
         }
+
+
 
         public IActionResult Logout()
         {

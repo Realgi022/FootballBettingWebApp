@@ -27,4 +27,20 @@ public class MatchController : Controller
         IEnumerable<MatchDto> matches = await _matchService.GetUpcomingMatchesDtoAsync();
         return View("~/Views/Match.cshtml", matches);
     }
+
+    [HttpPost]
+    public async Task<IActionResult> Create(MatchDto matchDto)
+    {
+        var role = HttpContext.Session.GetInt32("Role");
+        if (role != 1)
+            return Unauthorized();
+
+        if (!ModelState.IsValid)
+            return View(matchDto);
+
+        // Call service to create match
+        await _matchService.CreateMatchAsync(matchDto);
+
+        return RedirectToAction("Index");
+    }
 }
