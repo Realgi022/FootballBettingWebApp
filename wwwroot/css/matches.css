@@ -1,13 +1,14 @@
-/*entire page green background */
-body {
+/* ===== General Styles ===== */
+body, html {
     margin: 0;
     padding: 0;
-    background-color: #0b4228;
     font-family: Arial, sans-serif;
+    background-color: #0b4228;
     color: #fff;
+    height: 100%;
 }
 
-/* Centered content container */
+/* ===== Container ===== */
 .container {
     background-color: #145c38;
     padding: 30px;
@@ -15,22 +16,19 @@ body {
     width: 80%;
     max-width: 900px;
     margin: 40px auto;
-    text-align: center;
     box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-    min-height: 600px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    min-height: 600px;
 }
 
-
-
-/* Flexbox for image + text */
+/* ===== Content Box (Home Page) ===== */
 .content-box {
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
+    margin-bottom: 20px;
 }
 
 .image-box {
@@ -41,8 +39,6 @@ body {
     justify-content: center;
     align-items: center;
     border-radius: 5px;
-    color: #fff;
-    font-weight: bold;
 }
 
     .image-box img {
@@ -53,267 +49,22 @@ body {
 
 .text-box {
     width: 55%;
-    text-align: left;
     padding: 10px;
     font-size: 16px;
     line-height: 1.5;
 }
 
-/* Matches section */
-.matches {
-    margin-top: 20px;
-    text-align: left;
+/* ===== Matches Section ===== */
+.matches h3 {
+    border-bottom: 2px solid #ffc107;
+    padding-bottom: 5px;
+    display: inline-block;
 }
-
-    .matches h3 {
-        border-bottom: 2px solid #ffc107;
-        padding-bottom: 5px;
-        display: inline-block;
-    }
 
 .match-card {
     background: #247346;
     border-radius: 5px;
     padding: 12px;
-    margin-top: 10px;
-    display: block;
-    color: #fff;
-    font-weight: bold;
-    transition: background 0.3s;
-}
-
-    .match-card:hover {
-        background: #2e8c57;
-        cursor: pointer;
-    }
-
-/* Auth links */
-.auth-links {
-    margin-top: 20px;
-}
-
-    .auth-links a {
-        text-decoration: none;
-        font-weight: bold;
-        padding: 10px 18px;
-        border-radius: 4px;
-        transition: all 0.3s ease;
-        margin: 0 8px;
-        display: inline-block;
-    }
-
-        /* Login button (yellow) */
-        .auth-links a:first-of-type {
-            background-color: #ffc107;
-            color: #000;
-        }
-
-            .auth-links a:first-of-type:hover {
-                background-color: #e0a800;
-            }
-
-        /* Register button (green) */
-        .auth-links a.register {
-            background-color: #28a745;
-            color: #fff;
-        }
-
-            .auth-links a.register:hover {
-                background-color: #1e7e34;
-            }
-.auth-container {
-    background-color: #d9d9d9;
-    padding: 40px;
-    width: 320px;
-    margin: 100px auto;
-    border-radius: 8px;
-    text-align: center;
-    color: #000;
-    box-shadow: 0 0 10px rgba(0,0,0,0.3);
-}
-
-    .auth-container h2 {
-        text-align: left;
-        margin-bottom: 20px;
-        font-weight: normal;
-    }
-
-    .auth-container input {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 15px;
-        font-size: 22px;
-        border: none;
-        border-radius: 4px;
-        background-color: #fff7f7;
-        text-align: center;
-    }
-
-    .auth-container button {
-        background-color: #111;
-        color: #fff;
-        border: none;
-        padding: 8px 20px;
-        cursor: pointer;
-        border-radius: 3px;
-        font-size: 14px;
-    }
-
-        .auth-container button:hover {
-            background-color: #333;
-        }
-
-    .auth-container p {
-        margin-top: 15px;
-        font-size: 14px;
-    }
-
-    .auth-container a {
-        color: blue;
-        text-decoration: none;
-    }
-
-        .auth-container a:hover {
-            text-decoration: underline;
-        }
-
-/*Match page*/
-/* Entire page green theme */
-html, body {
-    margin: 0;
-    padding: 0;
-    height: 100vh; /* full viewport height */
-    overflow: hidden; /* prevent scrolling */
-    background-color: #0b4228;
-    font-family: Arial, sans-serif;
-    color: #fff;
-}
-
-.page {
-    display: flex;
-    height: 100vh; /* full viewport height */
-}
-
-/* Toggle button */
-.menu-toggle {
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    font-size: 24px;
-    background-color: #ffc107;
-    color: #000;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 4px;
-    cursor: pointer;
-    z-index: 1000;
-    transition: background-color 0.3s;
-}
-
-    /* Hover effect for toggle button */
-    .menu-toggle:hover {
-        background-color: #e0a800;
-    }
-
-/* Sidebar */
-.sidebar {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* space top to bottom */
-    width: 220px;
-    height: 100vh; /* full height */
-    background-color: #145c38;
-    padding: 20px;
-    box-sizing: border-box;
-    position: fixed;
-    top: 0;
-    left: 0;
-    transform: translateX(-240px);
-    transition: transform 0.3s ease;
-    box-shadow: 2px 0 6px rgba(0,0,0,0.4);
-    overflow-y: auto;
-}
-
-    /* Sidebar visible when active */
-    .sidebar.active {
-        transform: translateX(0);
-    }
-
-    .sidebar .nav-group {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-    }
-
-
-/* Sidebar buttons */
-.nav-btn {
-    margin-bottom: 12px;
-    background: #247346;
-    padding: 10px;
-    text-align: center;
-    border-radius: 6px;
-    transition: background 0.3s;
-}
-
-    .nav-btn:hover {
-        background: #2e8c57;
-    }
-
-    .nav-btn a {
-        color: #fff;
-        text-decoration: none;
-        display: block;
-        font-weight: bold;
-    }
-
-/* Main content area */
-.content {
-    flex: 1;
-    padding: 40px;
-    margin-left: 0;
-    transition: margin-left 0.3s ease;
-}
-
-/* Container for match cards */
-.container {
-    background-color: #145c38;
-    padding: 30px;
-    border-radius: 10px;
-    width: 80%;
-    max-width: 900px;
-    margin: 40px auto;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-    display: flex;
-    flex-direction: column;
-    height: 80vh; /* limit container height */
-}
-
-/* Matches section */
-.matches {
-    margin-top: 20px;
-    text-align: left;
-    flex: 1; /* take remaining space in container */
-    overflow-y: auto; /* enable vertical scrolling if too many matches */
-    padding-right: 5px; /* optional: to avoid scrollbar overlaying content */
-}
-
-    .matches::-webkit-scrollbar {
-        width: 8px;
-    }
-
-    .matches::-webkit-scrollbar-thumb {
-        background-color: #2e8c57;
-        border-radius: 4px;
-    }
-    .matches::-webkit-scrollbar-track {
-        background-color: #145c38;
-    }
-
-.match-card {
-    background: #247346;
-    border-radius: 5px;
-    padding: 15px;
     margin-top: 10px;
     color: #fff;
     font-weight: bold;
@@ -325,7 +76,6 @@ html, body {
         transform: scale(1.02);
     }
 
-/* Match details */
 .teams {
     font-size: 18px;
     margin-bottom: 8px;
@@ -339,32 +89,223 @@ html, body {
 .match-meta {
     color: #ccc;
     font-size: 14px;
-    margin-bottom: 8px;
 }
 
-/* Buttons */
-.actions .btn {
-    margin-right: 8px;
-    padding: 8px 12px;
-    background-color: #ffc107;
-    text-decoration: none;
+/* ===== Auth Links ===== */
+.auth-links {
+    margin-top: 20px;
+    text-align: center;
+}
+
+    .auth-links a {
+        text-decoration: none;
+        font-weight: bold;
+        padding: 10px 18px;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+        margin: 0 8px;
+        display: inline-block;
+    }
+
+        .auth-links a:first-of-type {
+            background-color: #ffc107;
+            color: #000;
+        }
+
+            .auth-links a:first-of-type:hover {
+                background-color: #e0a800;
+            }
+
+        .auth-links a.register {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+            .auth-links a.register:hover {
+                background-color: #1e7e34;
+            }
+
+/* ===== Auth Forms ===== */
+.auth-container {
+    background-color: #d9d9d9;
+    padding: 40px;
+    width: 320px;
+    margin: 100px auto;
+    border-radius: 8px;
+    text-align: center;
     color: #000;
-    border-radius: 4px;
-    transition: background 0.3s;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
 }
 
-    .actions .btn:hover {
+    .auth-container input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        font-size: 18px;
+        border: none;
+        border-radius: 4px;
+        background-color: #fff7f7;
+        text-align: center;
+    }
+
+    .auth-container button {
+        background-color: #111;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+        .auth-container button:hover {
+            background-color: #333;
+        }
+
+/* ===== Page Layout ===== */
+.page {
+    display: flex;
+    height: 100vh;
+}
+
+/* ===== Toggle Menu ===== */
+.menu-toggle {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    font-size: 24px;
+    background-color: #ffc107;
+    color: #000;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+    .menu-toggle:hover {
         background-color: #e0a800;
     }
 
-/* Remove white flash when clicked */
-a:focus, .btn:focus, .nav-btn a:focus {
-    outline: none;
+/* ===== Sidebar ===== */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 220px;
+    height: 100vh;
+    background-color: #145c38;
+    padding: 20px;
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translateX(-240px);
+    transition: transform 0.3s ease;
+    overflow-y: auto;
 }
 
-/* ===== Responsive Sidebar Behaviour ===== */
+    .sidebar.active {
+        transform: translateX(0);
+    }
 
-/* Large screens (desktop) */
+.nav-btn {
+    margin-bottom: 12px;
+    background: #247346;
+    padding: 10px;
+    text-align: center;
+    border-radius: 6px;
+    transition: background 0.3s;
+}
+
+    .nav-btn a {
+        color: #fff;
+        text-decoration: none;
+        display: block;
+        font-weight: bold;
+    }
+
+    .nav-btn:hover {
+        background: #2e8c57;
+    }
+
+/* ===== Content ===== */
+.content {
+    flex: 1;
+    padding: 40px;
+    margin-left: 0;
+    transition: margin-left 0.3s ease;
+}
+
+/* ===== Bet Receipt Table ===== */
+.table-wrapper {
+    margin: 40px auto;
+    width: 95%;
+    max-width: 1100px;
+    background: #0f3d2e;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #e8f5e9;
+    font-size: 15px;
+}
+
+    .styled-table th, .styled-table td {
+        padding: 12px 15px;
+        border: 1px solid #1a754f;
+        text-align: center;
+    }
+
+    .styled-table thead tr {
+        background-color: #145c44;
+        color: #ffffff;
+        font-weight: bold;
+    }
+
+    .styled-table tbody tr {
+        background-color: #0f4a36;
+    }
+
+        .styled-table tbody tr:nth-child(even) {
+            background-color: #0c3a2a;
+        }
+
+        .styled-table tbody tr:hover {
+            background-color: #14694c;
+            transition: 0.2s;
+        }
+
+/* ===== Wallet Card ===== */
+.wallet-card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    text-align: center;
+    color: #000;
+}
+
+.claim-btn {
+    padding: 10px 20px;
+    background: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+    .claim-btn:disabled {
+        background: #aaa;
+        cursor: not-allowed;
+    }
+
+/* ===== Responsive ===== */
 @media (min-width: 900px) {
     .sidebar {
         transform: translateX(0);
@@ -380,7 +321,6 @@ a:focus, .btn:focus, .nav-btn a:focus {
     }
 }
 
-/* Small screens (mobile) */
 @media (max-width: 899px) {
     .sidebar {
         position: fixed;
@@ -394,4 +334,22 @@ a:focus, .btn:focus, .nav-btn a:focus {
     }
 }
 
+/* ===== Scrollbars for Matches List ===== */
+.matches {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 5px;
+}
 
+    .matches::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .matches::-webkit-scrollbar-thumb {
+        background-color: #2e8c57;
+        border-radius: 4px;
+    }
+
+    .matches::-webkit-scrollbar-track {
+        background-color: #145c38;
+    }

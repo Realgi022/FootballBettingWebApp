@@ -1,15 +1,14 @@
 ﻿@model IEnumerable<BLL.DTOs.MatchDto>
-
 @{
     ViewData["Title"] = "Home Page";
+    Layout = "_Layout";
 }
 
 <div class="container">
     <div class="content-box">
         <div class="image-box">
-            <img src="@Url.Content("~/images/Logo.png.png")" alt="Betting Image" />
+            <img src="@Url.Content("~/images/Logo.png.png")" alt="Betting Logo" />
         </div>
-
         <div class="text-box">
             <h2>The betting website is a home to all gamblers who want to quit gambling!</h2>
         </div>
@@ -17,7 +16,6 @@
 
     <div class="matches">
         <h3>Upcoming matches</h3>
-
         @foreach (var match in Model)
         {
             <div class="match-card">

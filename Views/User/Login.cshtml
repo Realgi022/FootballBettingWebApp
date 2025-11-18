@@ -3,6 +3,11 @@
     ViewData["Title"] = "Login";
 }
 
+@* Prevent caching to avoid back-button issues *@
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+
 <div class="auth-container">
     <h2>Log in</h2>
 
@@ -12,9 +17,10 @@
     }
 
     <form asp-action="Login" method="post">
-        <input asp-for="Username" placeholder="Name" required />
+        <input asp-for="Username" placeholder="Username" required />
         <input asp-for="Password" type="password" placeholder="Password" required />
-
         <button type="submit">Login</button>
     </form>
+
+    <p>Don't have an account? <a href="/User/Register">Register</a></p>
 </div>

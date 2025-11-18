@@ -1,83 +1,28 @@
 ﻿@model BLL.DTOs.WalletDTO
-
 @{
     ViewData["Title"] = "My Wallet";
-    var username = Context.Session.GetString("Username");
+    Layout = "_Layout";
 }
 
-<link rel="stylesheet" href="~/css/matches.css" />
+<div class="container">
+    <h2>💼 My Wallet</h2>
 
-<div class="page">
-    <aside class="sidebar">
-        <div class="user-info">
-            @if (!string.IsNullOrEmpty(username))
-            {
-                <p>
-                    Logged in as: <strong>@username</strong>
-                    | Balance: <strong>$@Model.Balance.ToString("F2")</strong>
-                </p>
-            }
-        </div>
-
-
-        <div class="nav-btn"><a href="@Url.Action("Index", "Match")">🏟 Upcoming Matches</a></div>
-        <div class="nav-btn"><a href="@Url.Action("Place", "Bet")">💰 Place Bet</a></div>
-        <div class="nav-btn"><a href="@Url.Action("Index", "Wallet")" class="active">💼 Wallet</a></div>
-        <div class="nav-btn"><a href="#">📜 Betting History</a></div>
-        <div class="nav-btn"><a href="@Url.Action("Receipt", "Bet")" class="active">🧾 Receipt</a></div>
-    </aside>
-
-    <main class="content">
-        <div class="container">
-            <h2>💼 My Wallet</h2>
-
-            @if (TempData["Message"] != null)
-            {
-                <p style="color: green;">@TempData["Message"]</p>
-            }
-
-            <div class="wallet-card">
-                <h3>Current Balance: <strong>@Model.Balance</strong> coins</h3>
-
-                <form asp-action="Claim" method="post">
-                    <button type="submit" class="claim-btn" @(Model.CanClaim ? "" : "disabled")>
-                        Claim Daily Reward
-                    </button>
-                </form>
-
-                @if (!Model.CanClaim && Model.LastClaimed.HasValue)
-                {
-                    <p style="margin-top:10px;">
-                        You can claim again after:
-                        @Model.LastClaimed.Value.AddHours(24).ToLocalTime().ToString("dd MMM yyyy HH:mm")
-                    </p>
-                }
-            </div>
-        </div>
-    </main>
-</div>
-
-<style>
-    .wallet-card {
-        background: #fff;
-        padding: 20px;
-        border-radius: 16px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        text-align: center;
+    @if (TempData["Message"] != null)
+    {
+        <p style="color:green;">@TempData["Message"]</p>
     }
 
-    .claim-btn {
-        padding: 10px 20px;
-        background: #4caf50;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        margin-top: 10px;
-    }
+    <div class="wallet-card">
+        <h3>Current Balance: <strong>@Model.Balance</strong> coins</h3>
+        <form asp-action="Claim" method="post">
+            <button type="submit" class="claim-btn" @(Model.CanClaim ? "" : "disabled")>
+                Claim Daily Reward
+            </button>
+        </form>
 
-        .claim-btn:disabled {
-            background: #aaa;
-            cursor: not-allowed;
+        @if (!Model.CanClaim && Model.LastClaimed.HasValue)
+        {
+            <p>You can claim again after: @Model.LastClaimed.Value.AddHours(24).ToLocalTime().ToString("dd MMM yyyy HH:mm")</p>
         }
-</style>
+    </div>
+</div>

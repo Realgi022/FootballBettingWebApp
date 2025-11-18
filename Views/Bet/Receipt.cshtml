@@ -1,121 +1,44 @@
 ﻿@model IEnumerable<BLL.DTOs.BetDto>
-
 @{
     ViewData["Title"] = "My Bets Receipt";
-    var username = Context.Session.GetString("Username");
+    Layout = "_Layout";
 }
 
-<link rel="stylesheet" href="~/css/matches.css" />
+<h2>🧾 My Bet Receipt</h2>
 
-<div class="page">
-    <aside class="sidebar">
-        <div class="user-info">
-            @if (!string.IsNullOrEmpty(username))
-            {
-                <p>
-                    Logged in as: <strong>@username</strong>
-                    | Balance: <strong>$@ViewBag.Balance.ToString("F2")</strong>
-                </p>
-            }
-        </div>
-
-        <div class="nav-btn"><a href="@Url.Action("Index", "Match")">🏟 Upcoming Matches</a></div>
-        <div class="nav-btn"><a href="@Url.Action("Place", "Bet")">💰 Place Bet</a></div>
-        <div class="nav-btn"><a href="@Url.Action("Index", "Wallet")">💼 Wallet</a></div>
-        <div class="nav-btn"><a href="#">📜 Betting History</a></div>
-        <div class="nav-btn"><a href="@Url.Action("Receipt", "Bet")" class="active">🧾 Receipt</a></div>
-    </aside>
-
-    <main class="content">
-        <div class="container">
-            <h2>🧾 My Bet Receipt</h2>
-
-            @if (!Model.Any())
-            {
-                <p>No bets placed yet.</p>
-            }
-            else
-            {
-                <div class="table-wrapper">
-                    <table class="styled-table">
-                        <thead>
-                            <tr>
-                                <th>Match</th>
-                                <th>Bet Type</th>
-                                <th>Stake ($)</th>
-                                <th>Odds</th>
-                                <th><strong>Potential Win ($)</strong></th>
-                                <th>Status</th>
-                                <th>Placed At</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var bet in Model)
-                            {
-                                <tr>
-                                    <td>@bet.TeamHome vs @bet.TeamAway</td>
-                                    <td>@bet.BetType</td>
-                                    <td>@bet.Stake.ToString("F2")</td>
-                                    <td>@bet.Odds.ToString("F2")</td>
-                                    <td style="color: #2ecc71; font-weight: bold;">
-                                        $@(bet.AmountToWin.ToString("F2"))
-                                    </td>
-                                    <td>@bet.Status</td>
-                                    <td>@bet.PlacedAt.ToLocalTime().ToString("dd MMM yyyy HH:mm")</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            }
-        </div>
-    </main>
-</div>
-
-<style>
-    /* TABLE CONTAINER */
-    .table-wrapper {
-        margin: 40px auto;
-        width: 95%;
-        max-width: 1100px;
-        background: #0f3d2e; 
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    }
-
-    /* TABLE */
-    .styled-table {
-        width: 100%;
-        border-collapse: collapse;
-        color: #e8f5e9; 
-        font-size: 15px;
-    }
-
-        .styled-table thead tr {
-            background-color: #145c44; 
-            color: #ffffff;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        .styled-table th,
-        .styled-table td {
-            padding: 12px 15px;
-            border: 1px solid #1a754f;
-            text-align: center;
-        }
-
-        .styled-table tbody tr {
-            background-color: #0f4a36;
-        }
-
-            .styled-table tbody tr:nth-child(even) {
-                background-color: #0c3a2a;
-            }
-
-            .styled-table tbody tr:hover {
-                background-color: #14694c;
-                transition: 0.2s;
-            }
-</style>
+@if (!Model.Any())
+{
+    <p>No bets placed yet.</p>
+}
+else
+{
+    <div class="table-wrapper">
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Match</th>
+                    <th>Bet Type</th>
+                    <th>Stake ($)</th>
+                    <th>Odds</th>
+                    <th>Potential Win ($)</th>
+                    <th>Status</th>
+                    <th>Placed At</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var bet in Model)
+                {
+                    <tr>
+                        <td>@bet.TeamHome vs @bet.TeamAway</td>
+                        <td>@bet.BetType</td>
+                        <td>@bet.Stake.ToString("F2")</td>
+                        <td>@bet.Odds.ToString("F2")</td>
+                        <td style="color:#2ecc71; font-weight:bold;">$@bet.AmountToWin.ToString("F2")</td>
+                        <td>@bet.Status</td>
+                        <td>@bet.PlacedAt.ToLocalTime().ToString("dd MMM yyyy HH:mm")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

@@ -6,22 +6,18 @@
 <div class="auth-container">
     <h2>Register</h2>
 
-    <!-- Display error message if any -->
     @if (ViewBag.Error != null)
     {
-        <p style="color:red; margin-bottom:10px;">@ViewBag.Error</p>
+        <p style="color:red;">@ViewBag.Error</p>
     }
 
     <form asp-action="Register" method="post">
-        <input asp-for="Username" placeholder="Name" required />
+        <input asp-for="Username" placeholder="Username" required />
         <input asp-for="Password" type="password" placeholder="Password" required />
         <input asp-for="Age" type="number" placeholder="Age +18" min="18" required />
         <input asp-for="Email" type="email" placeholder="Email" required />
-
-
         <button type="submit">Register</button>
     </form>
 
-
-    <p>Already have an acc? <a href="/User/Login">Login</a></p>
+    <p>Already have an account? <a href="/User/Login">Login</a></p>
 </div>

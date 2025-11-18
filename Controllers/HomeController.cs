@@ -18,8 +18,19 @@ public class HomeController : Controller
         _matchService = matchService;
     }
 
+    // Landing page / Index
+    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
     public async Task<IActionResult> Index()
     {
+        var username = HttpContext.Session.GetString("Username");
+
+        // Redirect logged-in users to Upcoming Matches
+        if (!string.IsNullOrEmpty(username))
+        {
+            return RedirectToAction("Index", "Match");
+        }
+
+        // Guest users see the landing page with upcoming matches
         IEnumerable<MatchDto> upcomingMatches = await _matchService.GetUpcomingMatchesDtoAsync();
         return View(upcomingMatches);
     }

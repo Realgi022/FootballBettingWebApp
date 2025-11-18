@@ -1,13 +1,54 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>@ViewData["Title"] - FootballBettingSystem</title>
-    <link rel="stylesheet" href="~/css/site.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - BettingSite</title>
+    <link rel="stylesheet" href="~/css/matches.css" />
 </head>
 <body>
-    <main role="main">
-        @RenderBody()
-    </main>
+    @{
+        // Get current session username
+        var username = Context.Session.GetString("Username");
+        bool isAuthenticated = !string.IsNullOrEmpty(username);
+    }
+
+    @if (isAuthenticated)
+    {
+        <!-- Authenticated layout with sidebar -->
+        <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+        <div class="page">
+            <aside class="sidebar" id="sidebar">
+                <div class="user-info">
+                    <p>
+                        Logged in as: <strong>@username</strong>
+                        | Balance: <strong>$@ViewBag.Balance?.ToString("F2")</strong>
+                    </p>
+                </div>
+                <div class="nav-btn"><a href="@Url.Action("Index", "Match")">🏟 Upcoming Matches</a></div>
+                <div class="nav-btn"><a href="@Url.Action("Place", "Bet")">💰 Place Bet</a></div>
+                <div class="nav-btn"><a href="@Url.Action("Index", "Wallet")">💼 Wallet</a></div>
+                <div class="nav-btn"><a href="@Url.Action("Receipt", "Bet")">🧾 Receipt</a></div>
+                <div class="nav-btn"><a asp-controller="User" asp-action="Logout">🚪 Logout</a></div>
+            </aside>
+
+            <main class="content">
+                @RenderBody()
+            </main>
+        </div>
+
+        <script>
+            function toggleSidebar() {
+                document.getElementById("sidebar").classList.toggle("active");
+            }
+        </script>
+    }
+    else
+    {
+        <!-- Guest layout -->
+        <div class="guest-container">
+            @RenderBody()
+        </div>
+    }
 </body>
 </html>

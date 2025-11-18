@@ -1,68 +1,36 @@
 ﻿@model IEnumerable<BLL.DTOs.MatchDto>
-
 @{
     ViewData["Title"] = "Place Bet";
-    var username = Context.Session.GetString("Username");
+    Layout = "_Layout";
 }
 
-<link rel="stylesheet" href="~/css/matches.css" />
+<div class="container">
+    <h2>Place Bet</h2>
 
-<div class="page">
-    <aside class="sidebar">
-        <div class="user-info">
-            @if (!string.IsNullOrEmpty(username))
-            {
-                <p>
-                    Logged in as: <strong>@username</strong>
-                    | Balance: <strong>$@ViewBag.Balance.ToString("F2")</strong>
-                </p>
-            }
-        </div>
+    @if (TempData["Error"] != null)
+    {
+        <p style="color:red;">@TempData["Error"]</p>
+    }
 
-        <div class="nav-btn"><a href="@Url.Action("Index", "Match")">🏟 Upcoming Matches</a></div>
-        <div class="nav-btn"><a href="@Url.Action("Place", "Bet")">💰 Place Bet</a></div>
-        <div class="nav-btn"><a href="@Url.Action("Index", "Wallet")">💼 Wallet</a></div>
-        <div class="nav-btn"><a href="#">📜 Betting History</a></div>
-        <div class="nav-btn"><a href="@Url.Action("Receipt", "Bet")" class="active">🧾 Receipt</a></div>
-    </aside>
+    <div class="matches">
+        @foreach (var match in Model)
+        {
+            <form asp-controller="Bet" asp-action="PlaceBet" method="post" class="match-card">
+                <input type="hidden" name="MatchId" value="@match.MatchId" />
+                <div class="teams">@match.TeamHome vs @match.TeamAway</div>
+                <div class="match-meta">@match.Date.ToLocalTime().ToString("dd MMM yyyy HH:mm")</div>
 
-    <main class="content">
-        <div class="container">
-            <h2>Place Bet</h2>
+                <div>
+                    <label><input type="radio" name="BetType" value="1" required /> 1</label>
+                    <label><input type="radio" name="BetType" value="X" /> X</label>
+                    <label><input type="radio" name="BetType" value="2" /> 2</label>
+                </div>
 
-            @if (TempData["Error"] != null)
-            {
-                <p style="color:red; margin-bottom:10px;">@TempData["Error"]</p>
-            }
-
-            <div class="matches">
-                @foreach (var match in Model)
-                {
-                    <form asp-controller="Bet" asp-action="PlaceBet" method="post" class="match-card">
-                        <input type="hidden" name="MatchId" value="@match.MatchId" />
-
-
-                        <div class="teams">@match.TeamHome vs @match.TeamAway</div>
-                        <div class="match-meta">@match.Date.ToLocalTime().ToString("dd MMM yyyy HH:mm")</div>
-
-                        <!-- Bet type selection -->
-                        <div>
-                            <label><input type="radio" name="BetType" value="1" required /> 1</label>
-                            <label><input type="radio" name="BetType" value="X" /> X</label>
-                            <label><input type="radio" name="BetType" value="2" /> 2</label>
-                        </div>
-
-                        <!-- Stake input -->
-                        <div>
-                            <input type="number" step="0.01" min="1" name="Stake" placeholder="Amount" required />
-                            <input type="hidden" name="Odds" value="1.5" /> <!-- Optional default odds -->
-                            <button type="submit">Add Bet</button>
-                        </div>
-                    </form>
-                }
-
-                }
-            </div>
-        </div>
-    </main>
+                <div>
+                    <input type="number" step="0.01" min="1" name="Stake" placeholder="Amount" required />
+                    <button type="submit">Add Bet</button>
+                </div>
+            </form>
+        }
+    </div>
 </div>

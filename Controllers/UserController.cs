@@ -15,8 +15,13 @@ namespace FootballBettingWebApp.Controllers
         }
 
         [HttpGet]
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         public IActionResult Register()
         {
+            // Prevent logged-in users from accessing Register page
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("Username")))
+                return RedirectToAction("Index", "Match");
+
             return View();
         }
 
@@ -37,8 +42,13 @@ namespace FootballBettingWebApp.Controllers
         }
 
         [HttpGet]
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         public IActionResult Login()
         {
+            // Prevent logged-in users from accessing Login page
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("Username")))
+                return RedirectToAction("Index", "Match");
+
             return View();
         }
 
@@ -70,7 +80,6 @@ namespace FootballBettingWebApp.Controllers
                 return View(loginDto);
             }
         }
-
 
         public IActionResult Logout()
         {
