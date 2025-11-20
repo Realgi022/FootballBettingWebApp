@@ -1,7 +1,7 @@
 ﻿using BLL.DTOs;
 using BLL.Interfaces;
-using BLL.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Threading.Tasks;
 
 public class BetController : Controller
@@ -9,7 +9,6 @@ public class BetController : Controller
     private readonly IBetService _betService;
     private readonly IMatchService _matchService;
     private readonly IWalletService _walletService;
-
 
     public BetController(IBetService betService, IMatchService matchService, IWalletService walletService)
     {
@@ -43,18 +42,16 @@ public class BetController : Controller
 
         try
         {
-            // Attempt to place the bet
+            // Place the bet
             await _betService.AddBetAsync(bet, username);
-            return RedirectToAction("Receipt"); 
+            return RedirectToAction("Receipt");
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             TempData["Error"] = ex.Message;
 
-            // Reload the matches so the view has data again
+            // Reload matches and wallet for view
             var matches = await _matchService.GetUpcomingMatchesDtoAsync();
-
-            // Get wallet to show balance again
             var wallet = await _walletService.GetWalletAsync(username);
             ViewBag.Balance = wallet?.Balance ?? 0;
 
@@ -62,19 +59,55 @@ public class BetController : Controller
         }
     }
 
-
+    // Show user bets / receipt page
     public async Task<IActionResult> Receipt()
-{
-    var username = HttpContext.Session.GetString("Username");
-    if (string.IsNullOrEmpty(username))
-        return RedirectToAction("Login", "User");
+    {
+        var username = HttpContext.Session.GetString("Username");
+        if (string.IsNullOrEmpty(username))
+            return RedirectToAction("Login", "User");
 
-    var allBets = await _betService.GetAllBetsAsync(username); 
-    var userBets = allBets.Where(b => b.Username == username); 
+        var allBets = await _betService.GetAllBetsAsync(username);
 
-    var wallet = await _walletService.GetWalletAsync(username);
-    ViewBag.Balance = wallet?.Balance ?? 0;
+        // Only show bets that are pending or won (not yet claimed)
+        var userBets = allBets
+            .Where(b => b.Username == username && (b.Status == "Pending" || b.Status == "Won"));
 
-    return View("~/Views/Bet/Receipt.cshtml", userBets);
-}
+        var wallet = await _walletService.GetWalletAsync(username);
+        ViewBag.Balance = wallet?.Balance ?? 0;
+
+        return View("~/Views/Bet/Receipt.cshtml", userBets);
+    }
+
+
+    // Claim a winning bet
+    [HttpPost]
+    public async Task<IActionResult> Claim(int betId)
+    {
+        var username = HttpContext.Session.GetString("Username");
+        if (string.IsNullOrEmpty(username))
+            return RedirectToAction("Login", "User");
+
+        var allBets = await _betService.GetAllBetsAsync(username);
+        var bet = allBets.FirstOrDefault(b => b.BetId == betId && b.Username == username);
+
+        if (bet == null)
+            return NotFound();
+
+        if (bet.Status != "Won")
+            return BadRequest("Bet cannot be claimed.");
+
+        // Update wallet balance
+        var wallet = await _walletService.GetWalletAsync(username);
+        if (wallet == null)
+            return BadRequest("Wallet not found.");
+
+        wallet.Balance += bet.Stake * bet.Odds;
+        await _walletService.UpdateWalletAsync(wallet);
+
+        // Mark bet as claimed
+        bet.Status = "Claimed";
+        await _betService.UpdateBetAsync(bet);
+
+        return RedirectToAction("Receipt");
+    }
 }

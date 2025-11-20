@@ -1,0 +1,25 @@
+﻿@model BLL.DTOs.MatchDto
+@{
+    ViewData["Title"] = "Edit Match Result";
+}
+
+<h2>Edit Match Result</h2>
+
+<form asp-action="EditResult" method="post">
+    <input type="hidden" name="matchId" value="@Model.MatchId" />
+
+    <p>@Model.TeamHome vs @Model.TeamAway (@Model.Date.ToLocalTime().ToString("dd MMM yyyy HH:mm"))</p>
+
+    <label>
+        <input type="radio" name="result" value="1" required /> @Model.TeamHome Wins
+    </label>
+    <label>
+        <input type="radio" name="result" value="X" /> Draw
+    </label>
+    <label>
+        <input type="radio" name="result" value="2" /> @Model.TeamAway Wins
+    </label>
+
+    <br /><br />
+    <button type="submit">Save Result</button>
+</form>

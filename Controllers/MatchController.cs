@@ -1,17 +1,21 @@
 ﻿using BLL.DTOs;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using BLL.Interfaces;
+using BLL.Services;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 public class MatchController : Controller
 {
     private readonly IMatchService _matchService;
     private readonly IWalletService _walletService;
-    public MatchController(IMatchService matchService, IWalletService walletService)
+    private readonly IBetService _betService;
+
+    public MatchController(IMatchService matchService, IWalletService walletService, IBetService betService)
     {
         _matchService = matchService;
         _walletService = walletService;
+        _betService = betService;
     }
 
     public async Task<IActionResult> Index()
@@ -52,5 +56,38 @@ public class MatchController : Controller
 
         return RedirectToAction("Index");
     }
+
+    [HttpGet]
+    public async Task<IActionResult> EditResult(int matchId)
+    {
+        var role = HttpContext.Session.GetInt32("Role");
+        if (role != 1)
+            return Unauthorized();
+
+        var match = await _matchService.GetMatchByIdDtoAsync(matchId);
+        if (match == null) return NotFound();
+
+        return View("~/Views/AdminActions/EditResult.cshtml", match);
+    }
+
+
+    [HttpPost]
+    public async Task<IActionResult> EditResult(int matchId, string result)
+    {
+        var role = HttpContext.Session.GetInt32("Role");
+        if (role != 1)
+            return Unauthorized();
+
+        var match = await _matchService.GetMatchByIdDtoAsync(matchId);
+        if (match == null) return NotFound();
+
+        match.Result = result;
+        await _matchService.UpdateMatchResult(match);
+        await _betService.ResolveBetsAsync(match);
+
+        return RedirectToAction("Index");
+    }
+
+
 
 }

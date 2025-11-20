@@ -2,6 +2,12 @@
 @{
     ViewData["Title"] = "Upcoming Matches";
     Layout = "_Layout";
+
+    var role = 0;
+    if (Context?.Session != null && Context.Session.GetInt32("Role") != null)
+    {
+        role = Context.Session.GetInt32("Role").Value;
+    }
 }
 
 <div class="container">
@@ -12,6 +18,15 @@
             <div class="match-card">
                 <div class="teams">@m.TeamHome <span class="vs">vs</span> @m.TeamAway</div>
                 <div class="match-meta">@m.Date.ToLocalTime().ToString("dd MMM yyyy HH:mm")</div>
+
+                @* Only show Edit Result button if user is admin *@
+                @if (role == 1)
+                {
+                    <form asp-controller="Match" asp-action="EditResult" method="get">
+                        <input type="hidden" name="matchId" value="@m.MatchId" />
+                        <button type="submit">Edit Result</button>
+                    </form>
+                }
             </div>
         }
     </div>
