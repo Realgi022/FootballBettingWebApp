@@ -28,6 +28,16 @@ public class MatchController : Controller
         return View("~/Views/Match.cshtml", matches);
     }
 
+    [HttpGet]
+    public IActionResult Create()
+    {
+        var role = HttpContext.Session.GetInt32("Role");
+        if (role != 1)
+            return Unauthorized();
+
+        return View("~/Views/AdminActions/Create.cshtml");
+    }
+
     [HttpPost]
     public async Task<IActionResult> Create(MatchDto matchDto)
     {
@@ -36,11 +46,11 @@ public class MatchController : Controller
             return Unauthorized();
 
         if (!ModelState.IsValid)
-            return View(matchDto);
+            return View("~/Views/AdminActions/Create.cshtml", matchDto);
 
-        // Call service to create match
         await _matchService.CreateMatchAsync(matchDto);
 
         return RedirectToAction("Index");
     }
+
 }

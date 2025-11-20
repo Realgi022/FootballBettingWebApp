@@ -8,7 +8,6 @@
 </head>
 <body>
     @{
-        // Get current session username
         var username = Context.Session.GetString("Username");
         bool isAuthenticated = !string.IsNullOrEmpty(username);
     }
@@ -23,9 +22,14 @@
                     <p>
                         Logged in as: <strong>@username</strong>
                         | Balance: <strong>$@ViewBag.Balance?.ToString("F2")</strong>
+                        | Role: <strong>@Context.Session.GetInt32("Role")</strong> <!-- Debug line -->
                     </p>
                 </div>
                 <div class="nav-btn"><a href="@Url.Action("Index", "Match")">🏟 Upcoming Matches</a></div>
+                @if (Context.Session.GetInt32("Role") == 1)
+                {
+                    <div class="nav-btn"><a asp-controller="Match" asp-action="Create">➕ Create Match</a></div>
+                }
                 <div class="nav-btn"><a href="@Url.Action("Place", "Bet")">💰 Place Bet</a></div>
                 <div class="nav-btn"><a href="@Url.Action("Index", "Wallet")">💼 Wallet</a></div>
                 <div class="nav-btn"><a href="@Url.Action("Receipt", "Bet")">🧾 Receipt</a></div>
@@ -45,10 +49,12 @@
     }
     else
     {
-        <!-- Guest layout -->
         <div class="guest-container">
             @RenderBody()
         </div>
     }
+
+    <!-- Render page-specific scripts -->
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

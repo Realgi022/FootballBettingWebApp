@@ -17,16 +17,34 @@
         {
             <form asp-controller="Bet" asp-action="PlaceBet" method="post" class="match-card">
                 <input type="hidden" name="MatchId" value="@match.MatchId" />
+
+                <!-- Odds hidden inputs -->
+                <input type="hidden" name="Odds1" value="@match.Odds1" />
+                <input type="hidden" name="OddsX" value="@match.OddsDraw" />
+                <input type="hidden" name="Odds2" value="@match.Odds2" />
+                <!-- THIS is the fix: bind to BetDto.Odds -->
+                <input type="hidden" id="selectedOdds-@match.MatchId" name="Odds" value="0" />
+
                 <div class="teams">@match.TeamHome vs @match.TeamAway</div>
                 <div class="match-meta">@match.Date.ToLocalTime().ToString("dd MMM yyyy HH:mm")</div>
 
-                <div>
-                    <label><input type="radio" name="BetType" value="1" required /> 1</label>
-                    <label><input type="radio" name="BetType" value="X" /> X</label>
-                    <label><input type="radio" name="BetType" value="2" /> 2</label>
+                <div class="bet-options">
+                    <label>
+                        <input type="radio" name="BetType" value="1" required />
+                        1 (@match.Odds1:F2)
+                    </label>
+                    <label>
+                        <input type="radio" name="BetType" value="X" />
+                        X (@match.OddsDraw:F2)
+                    </label>
+                    <label>
+                        <input type="radio" name="BetType" value="2" />
+                        2 (@match.Odds2:F2)
+                    </label>
                 </div>
 
-                <div>
+
+                <div class="stake">
                     <input type="number" step="0.01" min="1" name="Stake" placeholder="Amount" required />
                     <button type="submit">Add Bet</button>
                 </div>
@@ -34,3 +52,27 @@
         }
     </div>
 </div>
+
+<script>
+    document.querySelectorAll("form.match-card").forEach(form => {
+        const matchId = form.querySelector("input[name='MatchId']").value;
+        const selected = document.getElementById("selectedOdds-" + matchId);
+
+        // Update selected odds when a radio button is clicked
+        form.querySelectorAll("input[name='BetType']").forEach(option => {
+            option.addEventListener("change", function () {
+                if (this.value === "1") selected.value = form.querySelector("input[name='Odds1']").value;
+                else if (this.value === "X") selected.value = form.querySelector("input[name='OddsX']").value;
+                else if (this.value === "2") selected.value = form.querySelector("input[name='Odds2']").value;
+            });
+        });
+
+        // Validate on form submit
+        form.addEventListener("submit", function (e) {
+            if (!selected.value || parseFloat(selected.value) < 1) {
+                e.preventDefault();
+                alert("Please select a bet option first!");
+            }
+        });
+    });
+</script>

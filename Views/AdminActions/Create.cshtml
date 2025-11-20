@@ -1,0 +1,34 @@
+﻿@model BLL.DTOs.MatchDto
+@{
+    ViewData["Title"] = "Create Match";
+}
+
+<h2>Create a New Match</h2>
+
+<form asp-action="Create" method="post">
+    <div>
+        <label>Home Team</label>
+        <input asp-for="TeamHome" />
+    </div>
+    <div>
+        <label>Away Team</label>
+        <input asp-for="TeamAway" />
+    </div>
+    <div>
+        <label>Match Date</label>
+        <input asp-for="Date" type="datetime-local" />
+    </div>
+    <div>
+        <label>Odds 1</label>
+        <input asp-for="Odds1" type="number" step="0.01" />
+    </div>
+    <div>
+        <label>Odds 2</label>
+        <input asp-for="Odds2" type="number" step="0.01" />
+    </div>
+    <div>
+        <label>Odds Draw</label>
+        <input asp-for="OddsDraw" type="number" step="0.01" />
+    </div>
+    <button type="submit">Create Match</button>
+</form>
