@@ -18,11 +18,9 @@
             <form asp-controller="Bet" asp-action="PlaceBet" method="post" class="match-card">
                 <input type="hidden" name="MatchId" value="@match.MatchId" />
 
-                <!-- Odds hidden inputs -->
                 <input type="hidden" name="Odds1" value="@match.Odds1" />
                 <input type="hidden" name="OddsX" value="@match.OddsDraw" />
                 <input type="hidden" name="Odds2" value="@match.Odds2" />
-                <!-- THIS is the fix: bind to BetDto.Odds -->
                 <input type="hidden" id="selectedOdds-@match.MatchId" name="Odds" value="0" />
 
                 <div class="teams">@match.TeamHome vs @match.TeamAway</div>
@@ -58,7 +56,6 @@
         const matchId = form.querySelector("input[name='MatchId']").value;
         const selected = document.getElementById("selectedOdds-" + matchId);
 
-        // Update selected odds when a radio button is clicked
         form.querySelectorAll("input[name='BetType']").forEach(option => {
             option.addEventListener("change", function () {
                 if (this.value === "1") selected.value = form.querySelector("input[name='Odds1']").value;
@@ -67,7 +64,6 @@
             });
         });
 
-        // Validate on form submit
         form.addEventListener("submit", function (e) {
             if (!selected.value || parseFloat(selected.value) < 1) {
                 e.preventDefault();

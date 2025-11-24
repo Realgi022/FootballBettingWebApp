@@ -18,7 +18,6 @@ public class HomeController : Controller
         _matchService = matchService;
     }
 
-    // Landing page / Index
     [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
     public async Task<IActionResult> Index()
     {

@@ -22,7 +22,7 @@
                     <p>
                         Logged in as: <strong>@username</strong>
                         | Balance: <strong>$@ViewBag.Balance?.ToString("F2")</strong>
-                        | Role: <strong>@Context.Session.GetInt32("Role")</strong> <!-- Debug line -->
+                        | Role: <strong>@Context.Session.GetInt32("Role")</strong> <!-- Debug line so i can see whether admin takes number 1 as a role -->
                     </p>
                 </div>
                 <div class="nav-btn"><a href="@Url.Action("Index", "Match")">🏟 Upcoming Matches</a></div>
