@@ -1,5 +1,6 @@
 ﻿using BLL.DTOs;
 using BLL.Interfaces;
+using BLL.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
@@ -42,21 +43,32 @@ public class BetController : Controller
 
         try
         {
-            // Place the bet
             await _betService.AddBetAsync(bet, username);
             return RedirectToAction("Receipt");
         }
-        catch (System.Exception ex)
+        catch (InvalidBetException ex)
         {
             TempData["Error"] = ex.Message;
-
-            // Reload matches and wallet for view
-            var matches = await _matchService.GetUpcomingMatchesDtoAsync();
-            var wallet = await _walletService.GetWalletAsync(username);
-            ViewBag.Balance = wallet?.Balance ?? 0;
-
-            return View("~/Views/Bet/PlaceBet.cshtml", matches);
         }
+        catch (BetNotFoundException ex)
+        {
+            TempData["Error"] = ex.Message;
+        }
+        catch (DatabaseOperationException ex)
+        {
+            TempData["Error"] = "Database error: " + ex.Message;
+        }
+        catch (System.Exception)
+        {
+            TempData["Error"] = "An unexpected error occurred. Please try again.";
+        }
+
+        // Reload matches and wallet for view after exception
+        var matches = await _matchService.GetUpcomingMatchesDtoAsync();
+        var wallet = await _walletService.GetWalletAsync(username);
+        ViewBag.Balance = wallet?.Balance ?? 0;
+
+        return View("~/Views/Bet/PlaceBet.cshtml", matches);
     }
 
     // Show user bets / receipt page
@@ -66,18 +78,29 @@ public class BetController : Controller
         if (string.IsNullOrEmpty(username))
             return RedirectToAction("Login", "User");
 
-        var allBets = await _betService.GetAllBetsAsync(username);
+        try
+        {
+            var allBets = await _betService.GetAllBetsAsync(username);
 
-        // Only show bets that are pending or won (not yet claimed)
-        var userBets = allBets
-            .Where(b => b.Username == username && (b.Status == "Pending" || b.Status == "Won"));
+            var userBets = allBets
+                .Where(b => b.Username == username && (b.Status == "Pending" || b.Status == "Won"));
 
-        var wallet = await _walletService.GetWalletAsync(username);
-        ViewBag.Balance = wallet?.Balance ?? 0;
+            var wallet = await _walletService.GetWalletAsync(username);
+            ViewBag.Balance = wallet?.Balance ?? 0;
 
-        return View("~/Views/Bet/Receipt.cshtml", userBets);
+            return View("~/Views/Bet/Receipt.cshtml", userBets);
+        }
+        catch (DatabaseOperationException ex)
+        {
+            TempData["Error"] = "Database error: " + ex.Message;
+            return RedirectToAction("Place");
+        }
+        catch (System.Exception)
+        {
+            TempData["Error"] = "An unexpected error occurred. Please try again.";
+            return RedirectToAction("Place");
+        }
     }
-
 
     // Claim a winning bet
     [HttpPost]
@@ -87,26 +110,37 @@ public class BetController : Controller
         if (string.IsNullOrEmpty(username))
             return RedirectToAction("Login", "User");
 
-        var allBets = await _betService.GetAllBetsAsync(username);
-        var bet = allBets.FirstOrDefault(b => b.BetId == betId && b.Username == username);
+        try
+        {
+            var allBets = await _betService.GetAllBetsAsync(username);
+            var bet = allBets.FirstOrDefault(b => b.BetId == betId && b.Username == username);
 
-        if (bet == null)
-            return NotFound();
+            if (bet == null)
+                return NotFound();
 
-        if (bet.Status != "Won")
-            return BadRequest("Bet cannot be claimed.");
+            if (bet.Status != "Won")
+                return BadRequest("Bet cannot be claimed.");
 
-        // Update wallet balance
-        var wallet = await _walletService.GetWalletAsync(username);
-        if (wallet == null)
-            return BadRequest("Wallet not found.");
+            var wallet = await _walletService.GetWalletAsync(username);
+            if (wallet == null)
+                return BadRequest("Wallet not found.");
 
-        wallet.Balance += bet.Stake * bet.Odds;
-        await _walletService.UpdateWalletAsync(wallet);
+            wallet.Balance += bet.Stake * bet.Odds;
+            await _walletService.UpdateWalletAsync(wallet);
 
-        // Mark bet as claimed
-        bet.Status = "Claimed";
-        await _betService.UpdateBetAsync(bet);
+            bet.Status = "Claimed";
+            await _betService.UpdateBetAsync(bet);
+
+            return RedirectToAction("Receipt");
+        }
+        catch (DatabaseOperationException ex)
+        {
+            TempData["Error"] = "Database error: " + ex.Message;
+        }
+        catch (System.Exception)
+        {
+            TempData["Error"] = "An unexpected error occurred. Please try again.";
+        }
 
         return RedirectToAction("Receipt");
     }
