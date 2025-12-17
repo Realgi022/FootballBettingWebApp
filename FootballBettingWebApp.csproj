@@ -7,6 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="BLL.Tests\**" />
+    <Compile Remove="DAL\**" />
+    <Compile Remove="Logic\**" />
+    <Content Remove="BLL.Tests\**" />
+    <Content Remove="DAL\**" />
+    <Content Remove="Logic\**" />
+    <EmbeddedResource Remove="BLL.Tests\**" />
+    <EmbeddedResource Remove="DAL\**" />
+    <EmbeddedResource Remove="Logic\**" />
+    <None Remove="BLL.Tests\**" />
+    <None Remove="DAL\**" />
+    <None Remove="Logic\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.9" />
@@ -15,7 +30,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DAL\DAL.csproj" />
+    <ProjectReference Include="DAL\DAL.csproj" />
+    <ProjectReference Include="Logic\BLL.csproj" />
   </ItemGroup>
 
 </Project>

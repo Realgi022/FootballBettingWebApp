@@ -1,0 +1,17 @@
+﻿using BLL.DTOs;
+using BLL.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BLL.Interfaces
+{
+    public interface IUserService
+    {
+        Task<bool> RegisterUserAsync(UserDTO userDto);
+        Task<User?> ValidateLoginAsync(LoginDTO loginDto);
+    }
+
+}
