@@ -14,7 +14,9 @@
 		<PackageReference Include="MSTest.TestFramework" Version="4.0.2" />
 		<PackageReference Include="MSTest.TestAdapter" Version="4.0.2" />
 		<PackageReference Include="MSTest.Analyzers" Version="4.0.2" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
 	</ItemGroup>
+
 
 	<ItemGroup>
 		<ProjectReference Include="..\DAL\DAL.csproj" />
