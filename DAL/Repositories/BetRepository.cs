@@ -105,7 +105,8 @@ namespace DAL.Repositories
                 await conn.OpenAsync();
 
                 var query = @"INSERT INTO Bets (UserId, MatchId, BetType, Stake, Odds, Status, PlacedAt)
-                              VALUES (@userId, @matchId, @betType, @stake, @odds, @status, @placedAt)";
+                      VALUES (@userId, @matchId, @betType, @stake, @odds, @status, @placedAt);
+                      SELECT CAST(SCOPE_IDENTITY() as int);";
 
                 await using var cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@userId", bet.UserId);
@@ -116,7 +117,8 @@ namespace DAL.Repositories
                 cmd.Parameters.AddWithValue("@status", bet.Status);
                 cmd.Parameters.AddWithValue("@placedAt", bet.PlacedAt);
 
-                await cmd.ExecuteNonQueryAsync();
+                // Retrieve the generated ID
+                bet.BetId = (int)await cmd.ExecuteScalarAsync();
             }
             catch (SqlException sqlEx)
             {
@@ -127,6 +129,7 @@ namespace DAL.Repositories
                 throw new DatabaseOperationException("Unexpected error while adding a new bet.", ex);
             }
         }
+
 
         public async Task UpdateAsync(Bet bet)
         {
