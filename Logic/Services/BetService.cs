@@ -71,49 +71,25 @@ namespace BLL.Services
         // ---------------------------------------------------------
         public async Task AddBetAsync(BetDto betDto, string username)
         {
-            try
-            {
-                if (betDto == null)
-                    throw new InvalidBetException("Bet cannot be null.");
-                if (betDto.Stake <= 0)
-                    throw new InvalidBetException("Stake must be greater than zero.");
-                if (betDto.Odds < 1)
-                    throw new InvalidBetException("Odds must be at least 1.");
-                if (string.IsNullOrWhiteSpace(betDto.BetType))
-                    throw new InvalidBetException("Bet type is required.");
-                if (string.IsNullOrWhiteSpace(username))
-                    throw new InvalidBetException("Username is required.");
+            if (betDto == null)
+                throw new InvalidBetException("Bet cannot be null.");
 
-                var user = await _userRepository.GetUserByUsernameAsync(username)
-                    ?? throw new BetNotFoundException("User not found.");
+            var user = await _userRepository.GetUserByUsernameAsync(username)
+                ?? throw new BetNotFoundException("User not found.");
 
-                var wallet = await _walletRepository.GetWalletByUserIdAsync(user.UserId)
-                    ?? throw new BetNotFoundException("Wallet not found.");
+            var wallet = await _walletRepository.GetWalletByUserIdAsync(user.UserId)
+                ?? throw new BetNotFoundException("Wallet not found.");
 
-                if (wallet.Balance < betDto.Stake)
-                    throw new InvalidBetException("Insufficient balance to place this bet.");
+            if (wallet.Balance < betDto.Stake)
+                throw new InvalidBetException("Insufficient balance.");
 
-                // Deduct balance
-                wallet.Balance -= betDto.Stake;
-                await _walletRepository.UpdateWalletAsync(wallet);
+            wallet.Balance -= betDto.Stake;
+            await _walletRepository.UpdateWalletAsync(wallet);
 
-                // Create bet entity
-                var bet = BetMapper.ToEntity(betDto, user.UserId);
-                await _betRepository.AddAsync(bet);
-            }
-            catch (InvalidBetException)
-            {
-                throw;
-            }
-            catch (BetNotFoundException)
-            {
-                throw;
-            }
-            catch (Exception ex)
-            {
-                throw new DatabaseOperationException("Unexpected error while adding bet.", ex);
-            }
+            var bet = BetMapper.ToEntity(betDto, user.UserId);
+            await _betRepository.AddAsync(bet); 
         }
+
 
         // ---------------------------------------------------------
         // RESOLVE BETS
